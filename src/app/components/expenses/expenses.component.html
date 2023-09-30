@@ -1,1 +1,57 @@
-<p>expenses works!</p>
+<div class="row mb-1">
+  <div class="col-6">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-import"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-export"></i>
+      </button>
+    </div>
+  </div>
+  <div class="col-6 text-end">
+    <button class="btn btn-success">
+      <i class="fa fa-add"></i>
+    </button>
+  </div>
+</div>
+<table class="table table-striped border p-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date</th>
+      <th scope="col">Item</th>
+      <th scope="col">Paid By</th>
+      <th scope="col">Paid With</th>
+      <th scope="col">Category</th>
+      <th scope="col">Tag</th>
+      <th scope="col">Note</th>
+      <th scope="col" class="w-50-px">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let expense of expenses; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ expense.date | date }}</td>
+      <td>{{ expense.item }}</td>
+      <td>{{ expense.paidBy }}</td>
+      <td>{{ expense.paidWith }}</td>
+      <td>{{ expense.category }}</td>
+      <td>
+        <span
+          class="badge"
+          [ngStyle]="{ 'background-color': getTagColor(expense.tag) }"
+          >{{ expense.tag }}</span
+        >
+      </td>
+      <td>{{ expense.note }}</td>
+      <td class="text-center">
+        <i class="fa fa-pencil-alt text-primary me-2"></i>
+        <i class="fa fa-trash text-danger"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
