@@ -39,13 +39,11 @@
       <td>{{ expense.item }}</td>
       <td>{{ expense.paidBy }}</td>
       <td>{{ expense.paidWith }}</td>
-      <td>{{ expense.category }}</td>
       <td>
-        <span
-          class="badge"
-          [ngStyle]="{ 'background-color': getTagColor(expense.tag) }"
-          >{{ expense.tag }}</span
-        >
+        <app-chip [chip]="expense.category"></app-chip>
+      </td>
+      <td>
+        <app-chip [chip]="expense.tag"></app-chip>
       </td>
       <td>{{ expense.note }}</td>
       <td class="text-center">

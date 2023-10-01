@@ -29,8 +29,16 @@ export class ExpensesComponent implements OnInit {
         paidBy: 'Bappaditya Sasmal',
         paidWith: 'UPI',
         amount: '1234.56',
-        category: 'Grocery',
-        tag: 'Essential',
+        category: {
+          label: 'Grocery',
+          backgroundColor: '#000099',
+          fontColor: '#FFFFFF',
+        },
+        tag: {
+          label: 'Essential',
+          backgroundColor: '#990099',
+          fontColor: '#FFFFFF',
+        },
         note: 'Milk, Bread, Butter and Orancge Juice',
       },
       {
@@ -39,8 +47,16 @@ export class ExpensesComponent implements OnInit {
         paidBy: 'Balaka Chatterjee',
         paidWith: 'Cash',
         amount: '788.99',
-        category: 'Medical',
-        tag: 'Baby',
+        category: {
+          label: 'Medical',
+          backgroundColor: '#990000',
+          fontColor: '#FFFFFF',
+        },
+        tag: {
+          label: 'Baby',
+          backgroundColor: '#009999',
+          fontColor: '#FFFFFF',
+        },
         note: 'Antacid and Laxative',
       },
       {
@@ -49,8 +65,16 @@ export class ExpensesComponent implements OnInit {
         paidBy: 'Bappaditya Sasmal',
         paidWith: 'Credit Card',
         amount: '876.99',
-        category: 'Others',
-        tag: 'Luxury',
+        category: {
+          label: 'Others',
+          backgroundColor: '#009900',
+          fontColor: '#FFFFFF',
+        },
+        tag: {
+          label: 'Luxury',
+          backgroundColor: '#999900',
+          fontColor: '#FFFFFF',
+        },
         note: 'Chiken Biryani',
       },
     ];

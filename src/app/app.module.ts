@@ -10,6 +10,7 @@ import { FooterComponent } from './components/layout/footer/footer.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { ExpensesComponent } from './components/expenses/expenses.component';
 import { TagsComponent } from './components/tags/tags.component';
+import { ChipComponent } from './components/chip/chip.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TagsComponent } from './components/tags/tags.component';
     ExpensesComponent,
     CategoriesComponent,
     ChartsComponent,
-    TagsComponent
+    TagsComponent,
+    ChipComponent
   ],
   imports: [
     BrowserModule,
