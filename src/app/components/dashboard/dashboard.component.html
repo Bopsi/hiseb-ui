@@ -1,1 +1,56 @@
-<p>dashboard works!</p>
+<div class="row">
+  <div class="col-lg-6 col-md-12 mb-2">
+    <table class="table table-striped border p-2">
+      <thead>
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">Amount</th>
+          <th scope="col" class="d-none d-md-block">Paid By</th>
+          <th scope="col">Paid On</th>
+          <th scope="col" class="d-none d-sm-block">Category</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let expense of expenses">
+          <td>
+            {{ expense.item }}
+          </td>
+          <td>
+            {{ expense.amount | currency : "INR" }}
+          </td>
+          <td class="d-none d-md-block">
+            {{ expense.paidBy }}
+          </td>
+          <td>
+            {{ expense.paidOn | date }}
+          </td>
+          <td class="d-none d-sm-block">
+            <app-chip
+              *ngIf="expense.category"
+              [chip]="expense.category"
+            ></app-chip>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+    <div class="card">
+      <div class="card-header">Amount vs Paid By</div>
+      <div class="card-body">
+        <canvas id="amountVsPaidBy" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+    <div class="card">
+      <div class="card-header">Amount vs Category</div>
+      <div class="card-body">
+        <canvas id="amountVsCategory" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
