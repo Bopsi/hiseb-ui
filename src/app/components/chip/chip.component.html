@@ -1,10 +1,10 @@
 <span
   class="badge"
-  [title]="chip.label"
+  [title]="chip.value"
   [ngStyle]="{
-    'background-color': chip.backgroundColor,
-    color: chip.fontColor
+    'background-color': chip.background,
+    color: chip.font
   }"
 >
-  {{ chip.label }}
+  {{ chip.value }}
 </span>

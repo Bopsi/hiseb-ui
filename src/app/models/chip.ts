@@ -1,11 +1,11 @@
 export class Chip {
-  label: string;
-  backgroundColor: string;
-  fontColor: string;
+  value: string;
+  background: string;
+  font: string;
 
-  constructor(label: string, backgroundColor: string, fontColor: string) {
-    this.label = label;
-    this.backgroundColor = backgroundColor;
-    this.fontColor = fontColor;
+  constructor(value: string, background: string, font: string) {
+    this.value = value;
+    this.background = background;
+    this.font = font;
   }
 }
