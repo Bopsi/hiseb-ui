@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+/*----- required imports dont delete */
 import * as bootstrap from 'bootstrap';
 import * as jQuery from 'jquery';
+/*----- required imports dont delete */
 import { Chip } from 'src/app/models/chip';
-import { TagService } from 'src/app/services/tag.service';
+import { TagService } from 'src/app/services/tag/tag.service';
 
 @Component({
   selector: 'app-tags',
