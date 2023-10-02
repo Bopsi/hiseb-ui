@@ -104,39 +104,19 @@
       <tr *ngIf="!expense.editing">
         <td>#</td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="expense.item" />
+          {{ expense.item }}
         </td>
         <td>
-          <input
-            type="number"
-            [min]="0"
-            [step]="1"
-            class="form-control"
-            [(ngModel)]="expense.amount"
-          />
+          {{ expense.amount | currency : "INR" }}
         </td>
         <td>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="expense.paidBy"
-          />
+          {{ expense.paidBy }}
         </td>
         <td>
-          <select class="form-control" [(ngModel)]="expense.paidWith">
-            <option [value]="null">--Select--</option>
-            <option value="UPI">UPI</option>
-            <option value="Credit Card">Credit Card</option>
-            <option value="Debit Card">Debit Card</option>
-            <option value="Cash">Cash</option>
-          </select>
+          {{ expense.paidWith }}
         </td>
         <td>
-          <input
-            type="date"
-            class="form-control"
-            [(ngModel)]="expense.paidOn"
-          />
+          {{ expense.paidOn | date }}
         </td>
         <td>
           <app-chip
@@ -148,21 +128,22 @@
           <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
         </td>
         <td>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="expense.comment"
-          />
+          {{ expense.comment }}
         </td>
         <td>
-          <button class="btn btn-success me-2" (click)="add()">
-            <i class="fa fa-save"></i>
+          <button
+            class="btn btn-primary me-2"
+            (click)="enableEdit(expense)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-edit"></i>
           </button>
-          <button class="btn btn-secondary me-2" (click)="resetAdd()">
-            <i class="fa-solid fa-rotate-left"></i>
-          </button>
-          <button class="btn btn-danger" (click)="cancelAdd()">
-            <i class="fa fa-xmark"></i>
+          <button
+            class="btn btn-danger"
+            (click)="enableDelete(expense)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-trash"></i>
           </button>
         </td>
       </tr>
@@ -222,13 +203,13 @@
           />
         </td>
         <td>
-          <button class="btn btn-success me-2" (click)="add()">
+          <button class="btn btn-success me-2" (click)="edit(expense)">
             <i class="fa fa-save"></i>
           </button>
-          <button class="btn btn-secondary me-2" (click)="resetAdd()">
+          <button class="btn btn-secondary me-2" (click)="resetEdit(expense)">
             <i class="fa-solid fa-rotate-left"></i>
           </button>
-          <button class="btn btn-danger" (click)="cancelAdd()">
+          <button class="btn btn-danger" (click)="cancelEdit(expense)">
             <i class="fa fa-xmark"></i>
           </button>
         </td>
@@ -253,9 +234,11 @@
         </button>
       </div>
       <div class="modal-body" *ngIf="backupExpense">
-        Are you sure you want to delete expense {{ backupExpense.item }} paid
-        with {{ backupExpense.paidWith }} on
-        {{ backupExpense.paidOn | date }} by {{ backupExpense.paidBy }}?
+        Are you sure you want to delete expense
+        <b>{{ backupExpense.item }}</b> paid with
+        <b>{{ backupExpense.paidWith }}</b> on
+        <b>{{ backupExpense.paidOn | date }}</b> by
+        <b>{{ backupExpense.paidBy }}</b> ?
       </div>
       <div class="modal-footer">
         <button
