@@ -10,4 +10,8 @@ export class Chip {
     this.background = background;
     this.font = font;
   }
+
+  getId(): string {
+    return this.label || '';
+  }
 }

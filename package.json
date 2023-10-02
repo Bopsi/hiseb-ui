@@ -20,6 +20,7 @@
     "@angular/router": "^14.2.0",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
+    "chart.js": "^4.4.0",
     "jquery": "^3.7.1",
     "rxjs": "~7.5.0",
     "zone.js": "~0.11.4"
@@ -29,6 +30,7 @@
     "@angular/cli": "~14.2.6",
     "@angular/compiler-cli": "^14.2.0",
     "@types/bootstrap": "^5.2.7",
+    "@types/chart.js": "^2.9.38",
     "@types/jasmine": "~4.0.0",
     "@types/jquery": "^3.5.20",
     "jasmine-core": "~4.3.0",
