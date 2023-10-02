@@ -13,7 +13,11 @@
     </div>
   </div>
   <div class="col-6 text-end">
-    <button class="btn btn-success" (click)="enableAdd()">
+    <button
+      class="btn btn-success"
+      (click)="enableAdd()"
+      [disabled]="editEnabled || addEnabled"
+    >
       <i class="fa fa-add"></i>
     </button>
   </div>
@@ -30,7 +34,9 @@
       <th scope="col" class="w-155-px">Actions</th>
     </tr>
   </thead>
+
   <tbody>
+    <!-- Add row -->
     <tr *ngIf="addEnabled">
       <td>#</td>
       <td>
@@ -57,40 +63,121 @@
         <button class="btn btn-success me-2" (click)="add()">
           <i class="fa fa-save"></i>
         </button>
-        <button class="btn btn-secondary me-2" (click)="reset()">
+        <button class="btn btn-secondary me-2" (click)="resetAdd()">
           <i class="fa-solid fa-rotate-left"></i>
         </button>
-        <button class="btn btn-danger" (click)="cancel()">
+        <button class="btn btn-danger" (click)="cancelAdd()">
           <i class="fa fa-xmark"></i>
         </button>
       </td>
     </tr>
-    <tr *ngFor="let tag of tags; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ tag.label }}</td>
-      <td>
-        <div
-          class="color-preview d-inline-block"
-          [ngStyle]="{
-            'background-color': tag.background
-          }"
-        ></div>
-        <div class="color-code d-inline-block">{{ tag.background }}</div>
-      </td>
-      <td>
-        <div
-          class="color-preview d-inline-block"
-          [ngStyle]="{
-            'background-color': tag.font
-          }"
-        ></div>
-        <div class="color-code d-inline-block">{{ tag.font }}</div>
-      </td>
-      <td><app-chip [chip]="tag"></app-chip></td>
-      <td class="text-center">
-        <i class="fa fa-pencil-alt text-primary me-2"></i>
-        <i class="fa fa-trash text-danger"></i>
-      </td>
-    </tr>
+
+    <ng-container *ngFor="let tag of tags; let i = index">
+      <!-- Rows -->
+      <tr *ngIf="!tag.editing">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ tag.label }}</td>
+        <td>
+          <div
+            class="color-preview d-inline-block"
+            [ngStyle]="{
+              'background-color': tag.background
+            }"
+          ></div>
+          <div class="color-code d-inline-block">{{ tag.background }}</div>
+        </td>
+        <td>
+          <div
+            class="color-preview d-inline-block"
+            [ngStyle]="{
+              'background-color': tag.font
+            }"
+          ></div>
+          <div class="color-code d-inline-block">{{ tag.font }}</div>
+        </td>
+        <td><app-chip [chip]="tag"></app-chip></td>
+        <td class="text-center">
+          <button
+            class="btn btn-primary me-2"
+            (click)="enableEdit(tag)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+          <button
+            class="btn btn-danger"
+            (click)="enableDelete(tag)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+
+      <!-- Editing row -->
+      <tr *ngIf="tag.editing">
+        <td>#</td>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="tag.label" />
+        </td>
+        <td>
+          <input
+            type="color"
+            class="form-control h-38-px"
+            [(ngModel)]="tag.background"
+          />
+        </td>
+        <td>
+          <input
+            type="color"
+            class="form-control h-38-px"
+            [(ngModel)]="tag.font"
+          />
+        </td>
+        <td>
+          <app-chip [chip]="tag"></app-chip>
+        </td>
+        <td>
+          <button class="btn btn-success me-2" (click)="edit(tag)">
+            <i class="fa fa-save"></i>
+          </button>
+          <button class="btn btn-secondary me-2" (click)="resetEdit(tag)">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button class="btn btn-danger" (click)="cancelEdit(tag)">
+            <i class="fa fa-xmark"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<div class="modal" id="deleteTag" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="btn btn-link text-danger p-0"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDelete()"
+        >
+          <i class="fa fa-lg fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete
+        <app-chip *ngIf="backupTag" [chip]="backupTag"></app-chip>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary me-auto" (click)="cancelDelete()">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="remove()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,4 +19,12 @@ export class TagService {
   add(tag: Chip) {
     return axios.post(`${environment.apiUrl}/tags`, tag); 
   }
+
+  edit(tag: Chip) {
+    return axios.put(`${environment.apiUrl}/tags/${tag.id}`, tag); 
+  }
+
+  delete(id: number) {
+    return axios.delete(`${environment.apiUrl}/tags/${id}`); 
+  }
 }

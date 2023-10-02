@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import * as bootstrap from 'bootstrap';
+import * as jQuery from 'jquery';
 import { Chip } from 'src/app/models/chip';
 import { TagService } from 'src/app/services/tag.service';
 
@@ -9,8 +11,10 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class TagsComponent implements OnInit {
   tags!: Array<Chip>;
-  addEnabled: boolean = false;
   tag!: Chip;
+  backupTag!: Chip;
+  addEnabled: boolean = false;
+  editEnabled: boolean = false;
 
   constructor(private tagService: TagService) {}
 
@@ -26,7 +30,21 @@ export class TagsComponent implements OnInit {
 
   add() {
     this.tagService.add(this.tag).then(() => {
-      this.cancel();
+      this.cancelAdd();
+      this.get();
+    });
+  }
+
+  edit(item: Chip) {
+    this.tagService.edit(item).then(() => {
+      this.cancelEdit(item);
+      this.get();
+    });
+  }
+
+  remove() {
+    this.tagService.delete(this.backupTag.id).then(() => {
+      this.cancelDelete();
       this.get();
     });
   }
@@ -36,11 +54,37 @@ export class TagsComponent implements OnInit {
     this.addEnabled = true;
   }
 
-  reset() {
+  enableEdit(item: any) {
+    item.editing = true;
+    this.backupTag = { ...item };
+    this.editEnabled = true;
+  }
+
+  enableDelete(item: any) {
+    this.backupTag = { ...item };
+    $('#deleteTag').modal('show');
+  }
+
+  resetAdd() {
     this.tag = new Chip('', '#000000', '#FFFFFF');
   }
 
-  cancel() {
+  resetEdit(item: Chip) {
+    item.label = this.backupTag.label;
+    item.background = this.backupTag.background;
+    item.font = this.backupTag.font;
+  }
+
+  cancelAdd() {
     this.addEnabled = false;
+  }
+
+  cancelEdit(item: any) {
+    item.editing = false;
+    this.editEnabled = false;
+  }
+
+  cancelDelete() {
+    $('#deleteTag').modal('hide');
   }
 }
