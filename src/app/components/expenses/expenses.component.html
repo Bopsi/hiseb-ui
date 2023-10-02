@@ -13,43 +13,262 @@
     </div>
   </div>
   <div class="col-6 text-end">
-    <button class="btn btn-success">
+    <button
+      class="btn btn-success"
+      (click)="enableAdd()"
+      [disabled]="editEnabled || addEnabled"
+    >
       <i class="fa fa-add"></i>
     </button>
   </div>
 </div>
+
 <table class="table table-striped border p-2">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Date</th>
       <th scope="col">Item</th>
+      <th scope="col">Amount</th>
       <th scope="col">Paid By</th>
       <th scope="col">Paid With</th>
+      <th scope="col">Paid On</th>
       <th scope="col">Category</th>
       <th scope="col">Tag</th>
-      <th scope="col">Note</th>
+      <th scope="col">Comment</th>
       <th scope="col" class="w-155-px">Actions</th>
     </tr>
   </thead>
+
   <tbody>
-    <tr *ngFor="let expense of expenses; let i = index">
-      <th scope="row">{{ i + 1 }}</th>
-      <td>{{ expense.date | date }}</td>
-      <td>{{ expense.item }}</td>
-      <td>{{ expense.paidBy }}</td>
-      <td>{{ expense.paidWith }}</td>
+    <!-- Add row -->
+    <tr *ngIf="addEnabled">
+      <td>#</td>
       <td>
-        <app-chip [chip]="expense.category"></app-chip>
+        <input type="text" class="form-control" [(ngModel)]="expense.item" />
       </td>
       <td>
-        <app-chip [chip]="expense.tag"></app-chip>
+        <input
+          type="number"
+          [min]="0"
+          [step]="1"
+          class="form-control"
+          [(ngModel)]="expense.amount"
+        />
       </td>
-      <td>{{ expense.note }}</td>
-      <td class="text-center">
-        <i class="fa fa-pencil-alt text-primary me-2"></i>
-        <i class="fa fa-trash text-danger"></i>
+      <td>
+        <input type="text" class="form-control" [(ngModel)]="expense.paidBy" />
+      </td>
+      <td>
+        <select class="form-control" [(ngModel)]="expense.paidWith">
+          <option value="UPI">UPI</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="Debit Card">Debit Card</option>
+          <option value="Cash">Cash</option>
+        </select>
+      </td>
+      <td>
+        <input type="date" class="form-control" [(ngModel)]="expense.paidOn" />
+      </td>
+      <td>
+        <select class="form-control" [(ngModel)]="expense.category">
+          <option *ngFor="let category of categories" [ngValue]="category">
+            <app-chip [chip]="category"></app-chip>
+          </option>
+        </select>
+      </td>
+      <td>
+        <select class="form-control" [(ngModel)]="expense.tag">
+          <option *ngFor="let tag of tags" [ngValue]="tag">
+            <app-chip [chip]="tag"></app-chip>
+          </option>
+        </select>
+      </td>
+      <td>
+        <input type="text" class="form-control" [(ngModel)]="expense.comment" />
+      </td>
+      <td>
+        <button class="btn btn-success me-2" (click)="add()">
+          <i class="fa fa-save"></i>
+        </button>
+        <button class="btn btn-secondary me-2" (click)="resetAdd()">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button class="btn btn-danger" (click)="cancelAdd()">
+          <i class="fa fa-xmark"></i>
+        </button>
       </td>
     </tr>
+
+    <ng-container *ngFor="let expense of expenses; let i = index">
+      <!-- Rows -->
+      <tr *ngIf="!expense.editing">
+        <td>#</td>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="expense.item" />
+        </td>
+        <td>
+          <input
+            type="number"
+            [min]="0"
+            [step]="1"
+            class="form-control"
+            [(ngModel)]="expense.amount"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="expense.paidBy"
+          />
+        </td>
+        <td>
+          <select class="form-control" [(ngModel)]="expense.paidWith">
+            <option [value]="null">--Select--</option>
+            <option value="UPI">UPI</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Cash">Cash</option>
+          </select>
+        </td>
+        <td>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="expense.paidOn"
+          />
+        </td>
+        <td>
+          <app-chip
+            *ngIf="expense.category"
+            [chip]="expense.category"
+          ></app-chip>
+        </td>
+        <td>
+          <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="expense.comment"
+          />
+        </td>
+        <td>
+          <button class="btn btn-success me-2" (click)="add()">
+            <i class="fa fa-save"></i>
+          </button>
+          <button class="btn btn-secondary me-2" (click)="resetAdd()">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button class="btn btn-danger" (click)="cancelAdd()">
+            <i class="fa fa-xmark"></i>
+          </button>
+        </td>
+      </tr>
+
+      <!-- Editing row -->
+      <tr *ngIf="expense.editing">
+        <td>#</td>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="expense.item" />
+        </td>
+        <td>
+          <input
+            type="number"
+            [min]="0"
+            [step]="1"
+            class="form-control"
+            [(ngModel)]="expense.amount"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="expense.paidBy"
+          />
+        </td>
+        <td>
+          <select class="form-control" [(ngModel)]="expense.paidWith">
+            <option [value]="null">--Select--</option>
+            <option value="UPI">UPI</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Cash">Cash</option>
+          </select>
+        </td>
+        <td>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="expense.paidOn"
+          />
+        </td>
+        <td>
+          <app-chip
+            *ngIf="expense.category"
+            [chip]="expense.category"
+          ></app-chip>
+        </td>
+        <td>
+          <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="expense.comment"
+          />
+        </td>
+        <td>
+          <button class="btn btn-success me-2" (click)="add()">
+            <i class="fa fa-save"></i>
+          </button>
+          <button class="btn btn-secondary me-2" (click)="resetAdd()">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button class="btn btn-danger" (click)="cancelAdd()">
+            <i class="fa fa-xmark"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<div class="modal" id="deleteExpense" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="btn btn-link text-danger p-0"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDelete()"
+        >
+          <i class="fa fa-lg fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="backupExpense">
+        Are you sure you want to delete expense {{ backupExpense.item }} paid
+        with {{ backupExpense.paidWith }} on
+        {{ backupExpense.paidOn | date }} by {{ backupExpense.paidBy }}?
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary me-auto"
+          (click)="cancelDelete()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="remove()">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
