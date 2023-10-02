@@ -116,7 +116,7 @@
 
       <!-- Editing row -->
       <tr *ngIf="tag.editing">
-        <td>#</td>
+        <td>{{ i + 1 }}</td>
         <td>
           <input type="text" class="form-control" [(ngModel)]="tag.label" />
         </td>
@@ -173,10 +173,16 @@
         <app-chip *ngIf="backupTag" [chip]="backupTag"></app-chip>?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary me-auto" (click)="cancelDelete()">
+        <button
+          type="button"
+          class="btn btn-secondary me-auto"
+          (click)="cancelDelete()"
+        >
           Close
         </button>
-        <button type="button" class="btn btn-primary" (click)="remove()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="remove()">
+          Yes
+        </button>
       </div>
     </div>
   </div>

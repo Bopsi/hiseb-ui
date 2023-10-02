@@ -1,1 +1,193 @@
-<p>categories works!</p>
+<div class="row mb-1">
+  <div class="col-6">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-import"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-export"></i>
+      </button>
+    </div>
+  </div>
+  <div class="col-6 text-end">
+    <button
+      class="btn btn-success"
+      (click)="enableAdd()"
+      [disabled]="editEnabled || addEnabled"
+    >
+      <i class="fa fa-add"></i>
+    </button>
+  </div>
+</div>
+
+<table class="table table-striped border p-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Label</th>
+      <th scope="col">Background Color</th>
+      <th scope="col">Font Color</th>
+      <th scope="col">Preview</th>
+      <th scope="col" class="w-155-px">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- Add row -->
+    <tr *ngIf="addEnabled">
+      <td>#</td>
+      <td>
+        <input type="text" class="form-control" [(ngModel)]="category.label" />
+      </td>
+      <td>
+        <input
+          type="color"
+          class="form-control h-38-px"
+          [(ngModel)]="category.background"
+        />
+      </td>
+      <td>
+        <input
+          type="color"
+          class="form-control h-38-px"
+          [(ngModel)]="category.font"
+        />
+      </td>
+      <td>
+        <app-chip [chip]="category"></app-chip>
+      </td>
+      <td>
+        <button class="btn btn-success me-2" (click)="add()">
+          <i class="fa fa-save"></i>
+        </button>
+        <button class="btn btn-secondary me-2" (click)="resetAdd()">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button class="btn btn-danger" (click)="cancelAdd()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </td>
+    </tr>
+
+    <ng-container *ngFor="let category of categories; let i = index">
+      <!-- Rows -->
+      <tr *ngIf="!category.editing">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ category.label }}</td>
+        <td>
+          <div
+            class="color-preview d-inline-block"
+            [ngStyle]="{
+              'background-color': category.background
+            }"
+          ></div>
+          <div class="color-code d-inline-block">{{ category.background }}</div>
+        </td>
+        <td>
+          <div
+            class="color-preview d-inline-block"
+            [ngStyle]="{
+              'background-color': category.font
+            }"
+          ></div>
+          <div class="color-code d-inline-block">{{ category.font }}</div>
+        </td>
+        <td><app-chip [chip]="category"></app-chip></td>
+        <td class="text-center">
+          <button
+            class="btn btn-primary me-2"
+            (click)="enableEdit(category)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+          <button
+            class="btn btn-danger"
+            (click)="enableDelete(category)"
+            [disabled]="editEnabled || addEnabled"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+
+      <!-- Editing row -->
+      <tr *ngIf="category.editing">
+        <td>{{ i + 1 }}</td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="category.label"
+          />
+        </td>
+        <td>
+          <input
+            type="color"
+            class="form-control h-38-px"
+            [(ngModel)]="category.background"
+          />
+        </td>
+        <td>
+          <input
+            type="color"
+            class="form-control h-38-px"
+            [(ngModel)]="category.font"
+          />
+        </td>
+        <td>
+          <app-chip [chip]="category"></app-chip>
+        </td>
+        <td>
+          <button class="btn btn-success me-2" (click)="edit(category)">
+            <i class="fa fa-save"></i>
+          </button>
+          <button class="btn btn-secondary me-2" (click)="resetEdit(category)">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button class="btn btn-danger" (click)="cancelEdit(category)">
+            <i class="fa fa-xmark"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+
+<div class="modal" id="deleteCategory" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="btn btn-link text-danger p-0"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="cancelDelete()"
+        >
+          <i class="fa fa-lg fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete
+        <app-chip *ngIf="backupCategory" [chip]="backupCategory"></app-chip>?
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary me-auto"
+          (click)="cancelDelete()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="remove()">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

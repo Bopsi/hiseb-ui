@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExpensesComponent } from './components/expenses/expenses.component';
 import { ChartsComponent } from './components/charts/charts.component';
-import { CategoriesComponent } from './components/categories/categories.component';
 import { TagsComponent } from './components/tags/tags.component';
+import { CategoriesComponent } from './components/categories/categories.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'expenses', component: ExpensesComponent },
   { path: 'charts', component: ChartsComponent },
   { path: 'categories', component: CategoriesComponent },
-  { path: 'tags', component: TagsComponent }
+  { path: 'tags', component: TagsComponent },
 ];
 
 @NgModule({
