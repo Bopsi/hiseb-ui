@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+.h-38-px {
+  height: 38px;
+}
+
+.w-38-px {
+  width: 38px;
+}
+
+.w-155-px {
+  width: 155px;
+}
+
+.color-preview {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  border: 2px solid #333;
+  vertical-align: middle;
+}
+
+.color-code {
+  display: inline-block;
+  height: 34px;
+  margin-left: 5px;
+  vertical-align: middle;
+  padding-top: 6px;
+}

@@ -30,12 +30,12 @@ export class ExpensesComponent implements OnInit {
         paidWith: 'UPI',
         amount: '1234.56',
         category: {
-          value: 'Grocery',
+          label: 'Grocery',
           background: '#000099',
           font: '#FFFFFF',
         },
         tag: {
-          value: 'Essential',
+          label: 'Essential',
           background: '#990099',
           font: '#FFFFFF',
         },
@@ -48,12 +48,12 @@ export class ExpensesComponent implements OnInit {
         paidWith: 'Cash',
         amount: '788.99',
         category: {
-          value: 'Medical',
+          label: 'Medical',
           background: '#990000',
           font: '#FFFFFF',
         },
         tag: {
-          value: 'Baby',
+          label: 'Baby',
           background: '#009999',
           font: '#FFFFFF',
         },
@@ -66,12 +66,12 @@ export class ExpensesComponent implements OnInit {
         paidWith: 'Credit Card',
         amount: '876.99',
         category: {
-          value: 'Others',
+          label: 'Others',
           background: '#009900',
           font: '#FFFFFF',
         },
         tag: {
-          value: 'Luxury',
+          label: 'Luxury',
           background: '#999900',
           font: '#FFFFFF',
         },

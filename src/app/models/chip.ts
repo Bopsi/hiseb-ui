@@ -1,10 +1,10 @@
 export class Chip {
-  value: string;
+  label: string;
   background: string;
   font: string;
 
-  constructor(value: string, background: string, font: string) {
-    this.value = value;
+  constructor(label: string, background: string, font: string) {
+    this.label = label;
     this.background = background;
     this.font = font;
   }

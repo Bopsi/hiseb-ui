@@ -11,6 +11,7 @@ import { HeaderComponent } from './components/layout/header/header.component';
 import { ExpensesComponent } from './components/expenses/expenses.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { ChipComponent } from './components/chip/chip.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ChipComponent } from './components/chip/chip.component';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [],

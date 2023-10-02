@@ -1,1 +1,96 @@
-<p>tags works!</p>
+<div class="row mb-1">
+  <div class="col-6">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-import"></i>
+      </button>
+      <button type="button" class="btn btn-outline-primary">
+        <i class="fa fa-file-export"></i>
+      </button>
+    </div>
+  </div>
+  <div class="col-6 text-end">
+    <button class="btn btn-success" (click)="enableAdd()">
+      <i class="fa fa-add"></i>
+    </button>
+  </div>
+</div>
+
+<table class="table table-striped border p-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Label</th>
+      <th scope="col">Background Color</th>
+      <th scope="col">Font Color</th>
+      <th scope="col">Preview</th>
+      <th scope="col" class="w-155-px">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="addEnabled">
+      <td>#</td>
+      <td>
+        <input type="text" class="form-control" [(ngModel)]="tag.label" />
+      </td>
+      <td>
+        <input
+          type="color"
+          class="form-control h-38-px"
+          [(ngModel)]="tag.background"
+        />
+      </td>
+      <td>
+        <input
+          type="color"
+          class="form-control h-38-px"
+          [(ngModel)]="tag.font"
+        />
+      </td>
+      <td>
+        <app-chip [chip]="tag"></app-chip>
+      </td>
+      <td>
+        <button class="btn btn-success me-2" (click)="add()">
+          <i class="fa fa-save"></i>
+        </button>
+        <button class="btn btn-secondary me-2" (click)="reset()">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button class="btn btn-danger" (click)="cancel()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </td>
+    </tr>
+    <tr *ngFor="let tag of tags; let i = index">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ tag.label }}</td>
+      <td>
+        <div
+          class="color-preview d-inline-block"
+          [ngStyle]="{
+            'background-color': tag.background
+          }"
+        ></div>
+        <div class="color-code d-inline-block">{{ tag.background }}</div>
+      </td>
+      <td>
+        <div
+          class="color-preview d-inline-block"
+          [ngStyle]="{
+            'background-color': tag.font
+          }"
+        ></div>
+        <div class="color-code d-inline-block">{{ tag.font }}</div>
+      </td>
+      <td><app-chip [chip]="tag"></app-chip></td>
+      <td class="text-center">
+        <i class="fa fa-pencil-alt text-primary me-2"></i>
+        <i class="fa fa-trash text-danger"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>
