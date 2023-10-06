@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app.routing.module';
 import { AppComponent } from './app.component';
 import { ChipComponent } from './components/chip/chip.component';
 import { LoaderComponent } from './components/loader/loader.component';
-import { TagsComponent } from './components/tags/tags.component';
+import { TagsComponent } from './views/tags/tags.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { CategoriesComponent } from './views/categories/categories.component';

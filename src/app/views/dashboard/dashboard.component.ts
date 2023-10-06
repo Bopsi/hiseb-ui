@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
       colors: [],
     },
   };
+  showLoader: boolean = false;
 
   constructor(private expenseService: ExpenseService) {}
 
@@ -29,12 +30,19 @@ export class DashboardComponent implements OnInit {
   }
 
   get() {
-    this.expenseService.findAll().then((expenses) => {
-      this.expenses = expenses.data;
-      this.generateStats();
-      this.initAmountVsPaidBy();
-      this.initAmountVsCategory();
-    });
+    this.showLoader = true;
+    this.expenseService
+      .findAll()
+      .then((expenses) => {
+        this.expenses = expenses.data;
+        this.generateStats();
+        this.initAmountVsPaidBy();
+        this.initAmountVsCategory();
+      })
+      .catch(() => {})
+      .finally(() => {
+        // this.showLoader = false;
+      });
   }
 
   initAmountVsPaidBy() {

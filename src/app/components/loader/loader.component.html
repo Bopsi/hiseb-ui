@@ -1,1 +1,25 @@
-<p>loader works!</p>
+<div *ngIf="show" class="hiseb-loader-container">
+  <div class="row hiseb-loader-icon text-center">
+    <div class="col">
+      <i class="fa fa-3x fa-plus me-2 bright-red" id="plus"></i>
+    </div>
+
+    <div class="col">
+      <i class="fa fa-3x fa-minus me-2 bright-blue" id="minus"></i>
+    </div>
+
+    <div class="col">
+      <i class="fa fa-3x fa-xmark me-2 bright-yellow" id="multiply"></i>
+    </div>
+
+    <div class="col">
+      <i class="fa fa-3x fa-divide bright-green" id="divide"></i>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <span class="text-light mt-2"><h4>Loading . . .</h4></span>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show"></div>

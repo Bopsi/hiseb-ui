@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { TagsComponent } from './components/tags/tags.component';
+import { TagsComponent } from './views/tags/tags.component';
 import { CategoriesComponent } from './views/categories/categories.component';
 import { ChartsComponent } from './views/charts/charts.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';

@@ -1,0 +1,35 @@
+.hiseb-loader-container {
+  z-index: 1052;
+  opacity: 1;
+  position: absolute;
+  top: calc(50% - 75px);
+  left: calc(50% - 150px);
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 15px;
+  border-radius: 10px;
+  width: 300px;
+  height: 115px;
+}
+
+.bright-red {
+  color: red;
+}
+
+.bright-blue {
+  color: blue;
+}
+
+.bright-yellow {
+  color: yellow;
+}
+
+.bright-green {
+  color: rgb(43, 255, 43);
+}
+
+.w-50 {
+  width: 50px !important;
+  height: 70px !important;
+  display: inline-block;
+  border: 1px solid black;
+}
