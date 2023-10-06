@@ -18,6 +18,8 @@ export class CategoriesComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
+  showLoader: boolean = false;
+
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
@@ -25,9 +27,16 @@ export class CategoriesComponent implements OnInit {
   }
 
   get() {
-    this.categoryService.findAll().then((categories: any) => {
-      this.categories = categories.data;
-    });
+    this.showLoader = true;
+    this.categoryService
+      .findAll()
+      .then((categories: any) => {
+        this.categories = categories.data;
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.showLoader = false;
+      });
   }
 
   add() {

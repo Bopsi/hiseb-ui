@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
       colors: [],
     },
   };
+
   showLoader: boolean = false;
 
   constructor(private expenseService: ExpenseService) {}
@@ -41,7 +42,7 @@ export class DashboardComponent implements OnInit {
       })
       .catch(() => {})
       .finally(() => {
-        // this.showLoader = false;
+        this.showLoader = false;
       });
   }
 

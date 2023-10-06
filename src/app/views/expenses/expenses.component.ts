@@ -23,6 +23,8 @@ export class ExpensesComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
+  showLoader: boolean = false;
+
   constructor(
     private categoryService: CategoryService,
     private tagService: TagService,
@@ -34,14 +36,17 @@ export class ExpensesComponent implements OnInit {
   }
 
   init() {
-    Promise.all([
-      this.categoryService.findAll(),
-      this.tagService.findAll(),
-    ]).then(([categories, tags]) => {
-      this.categories = categories.data;
-      this.tags = tags.data;
-      this.get()
-    });
+    this.showLoader = true;
+    Promise.all([this.categoryService.findAll(), this.tagService.findAll()])
+      .then(([categories, tags]) => {
+        this.categories = categories.data;
+        this.tags = tags.data;
+        this.get();
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.showLoader = false;
+      });
   }
 
   get() {

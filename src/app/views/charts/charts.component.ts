@@ -32,6 +32,8 @@ export class ChartsComponent implements OnInit {
     },
   };
 
+  showLoader: boolean = false;
+
   constructor(private expenseService: ExpenseService) {}
 
   ngOnInit(): void {
@@ -39,14 +41,21 @@ export class ChartsComponent implements OnInit {
   }
 
   get() {
-    this.expenseService.findAll().then((expenses) => {
-      this.expenses = expenses.data;
-      this.generateStats();
-      this.initAmountVsPaidBy();
-      this.initAmountVsPaidWith();
-      this.initAmountVsCategory();
-      this.initAmountVsTag();
-    });
+    this.showLoader = true;
+    this.expenseService
+      .findAll()
+      .then((expenses) => {
+        this.expenses = expenses.data;
+        this.generateStats();
+        this.initAmountVsPaidBy();
+        this.initAmountVsPaidWith();
+        this.initAmountVsCategory();
+        this.initAmountVsTag();
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.showLoader = false;
+      });
   }
 
   initAmountVsPaidBy() {
