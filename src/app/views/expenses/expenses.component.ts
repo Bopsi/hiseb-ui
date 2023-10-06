@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 import * as jQuery from 'jquery';
 /*----- required imports dont delete */
+import * as Excel from 'exceljs';
+import * as FileSaver from 'file-saver';
 import { Expense } from 'src/app/models/expense';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { TagService } from 'src/app/services/tag/tag.service';
@@ -118,5 +120,35 @@ export class ExpensesComponent implements OnInit {
 
   cancelDelete() {
     $('#deleteExpense').modal('hide');
+  }
+
+  export() {
+    const workbook = new Excel.Workbook();
+    const sheet = workbook.addWorksheet('Expenses');
+    sheet.columns = [
+      { header: '#', key: 'id' },
+      { header: 'Item', key: 'item' },
+      { header: 'Paid By', key: 'paidBy' },
+      { header: 'Paid With', key: 'paidWith' },
+      { header: 'Paid On', key: 'paidOn' },
+      { header: 'Category', key: 'category' },
+      { header: 'Tag', key: 'tag' },
+      { header: 'Comment', key: 'comment' },
+    ];
+    this.expenses.forEach((expense: any, i: number) => {
+      sheet.addRow({
+        ...expense,
+        id: i + 1,
+        category: expense.category.label,
+        tag: expense.tag.label,
+      });
+    });
+
+    workbook.xlsx
+      .writeBuffer()
+      .then((buffer) =>
+        FileSaver.saveAs(new Blob([buffer]), `Expenses.xlsx`)
+      )
+      .catch((err) => console.log('Error writing excel export', err));
   }
 }

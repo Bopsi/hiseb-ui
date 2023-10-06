@@ -21,6 +21,8 @@
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.0",
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
     "rxjs": "~7.5.0",
     "zone.js": "~0.11.4"
@@ -31,6 +33,7 @@
     "@angular/compiler-cli": "^14.2.0",
     "@types/bootstrap": "^5.2.7",
     "@types/chart.js": "^2.9.38",
+    "@types/file-saver": "^2.0.5",
     "@types/jasmine": "~4.0.0",
     "@types/jquery": "^3.5.20",
     "jasmine-core": "~4.3.0",
