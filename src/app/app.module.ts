@@ -2,16 +2,20 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing.module';
-import { ChartsComponent } from './components/charts/charts.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { FooterComponent } from './components/layout/footer/footer.component';
-import { HeaderComponent } from './components/layout/header/header.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
-import { TagsComponent } from './components/tags/tags.component';
+
+import { AppComponent } from './app.component';
 import { ChipComponent } from './components/chip/chip.component';
-import { CategoriesComponent } from './components/categories/categories.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { TagsComponent } from './components/tags/tags.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HeaderComponent } from './layout/header/header.component';
+import { CategoriesComponent } from './views/categories/categories.component';
+import { ChartsComponent } from './views/charts/charts.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { ExpensesComponent } from './views/expenses/expenses.component';
+
+
 
 
 @NgModule({
@@ -24,7 +28,8 @@ import { CategoriesComponent } from './components/categories/categories.componen
     ChartsComponent,
     CategoriesComponent,
     TagsComponent,
-    ChipComponent
+    ChipComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

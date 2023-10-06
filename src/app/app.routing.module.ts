@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
-import { ChartsComponent } from './components/charts/charts.component';
+
 import { TagsComponent } from './components/tags/tags.component';
-import { CategoriesComponent } from './components/categories/categories.component';
+import { CategoriesComponent } from './views/categories/categories.component';
+import { ChartsComponent } from './views/charts/charts.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { ExpensesComponent } from './views/expenses/expenses.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
