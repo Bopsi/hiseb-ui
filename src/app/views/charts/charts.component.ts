@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 
 import { Expense } from 'src/app/models/expense';
+import { EventBusService } from 'src/app/services/eventBus/event-bus.service';
 import { ExpenseService } from 'src/app/services/expense/expense.service';
 
 @Component({
@@ -32,16 +33,17 @@ export class ChartsComponent implements OnInit {
     },
   };
 
-  showLoader: boolean = false;
-
-  constructor(private expenseService: ExpenseService) {}
+  constructor(
+    private expenseService: ExpenseService,
+    private eventBus: EventBusService
+  ) {}
 
   ngOnInit(): void {
     this.get();
   }
 
   get() {
-    this.showLoader = true;
+    this.eventBus.emit('loader', true);
     this.expenseService
       .findAll()
       .then((expenses) => {
@@ -52,9 +54,11 @@ export class ChartsComponent implements OnInit {
         this.initAmountVsCategory();
         this.initAmountVsTag();
       })
-      .catch(() => {})
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
       .finally(() => {
-        this.showLoader = false;
+        this.eventBus.emit('loader', false);
       });
   }
 

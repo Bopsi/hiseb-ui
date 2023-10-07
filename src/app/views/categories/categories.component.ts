@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-/*----- required imports dont delete */
-import * as bootstrap from 'bootstrap';
-import * as jQuery from 'jquery';
-/*----- required imports dont delete */
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import * as Excel from 'exceljs';
+import * as FileSaver from 'file-saver';
+
 import { Chip } from 'src/app/models/chip';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { EventBusService } from 'src/app/services/eventBus/event-bus.service';
 
 @Component({
   selector: 'app-categories',
@@ -18,50 +18,79 @@ export class CategoriesComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
-  showLoader: boolean = false;
+  @Output() error: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private eventBus: EventBusService
+  ) {}
 
   ngOnInit(): void {
     this.get();
   }
 
   get() {
-    this.showLoader = true;
+    this.eventBus.emit('loader', true);
     this.categoryService
       .findAll()
       .then((categories: any) => {
         this.categories = categories.data;
       })
-      .catch(() => {})
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
       .finally(() => {
-        this.showLoader = false;
+        this.eventBus.emit('loader', false);
       });
   }
 
   add() {
-    this.categoryService.add(this.category).then(() => {
-      this.cancelAdd();
-      this.get();
-    });
+    this.categoryService
+      .add(this.category)
+      .then(() => {
+        this.cancelAdd();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   edit(item: Chip) {
-    this.categoryService.edit(item).then(() => {
-      this.cancelEdit(item);
-      this.get();
-    });
+    this.categoryService
+      .edit(item)
+      .then(() => {
+        this.cancelEdit(item);
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   remove() {
-    this.categoryService.delete(this.backupCategory.id).then(() => {
-      this.cancelDelete();
-      this.get();
-    });
+    this.categoryService
+      .delete(this.backupCategory.id)
+      .then(() => {
+        this.cancelDelete();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   enableAdd() {
-    this.category = new Chip('', '#000000', '#FFFFFF');
+    this.category = new Chip('', '#000000', '#ffffff');
     this.addEnabled = true;
   }
 
@@ -77,7 +106,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   resetAdd() {
-    this.category = new Chip('', '#000000', '#FFFFFF');
+    this.category = new Chip('', '#000000', '#ffffff');
   }
 
   resetEdit(item: Chip) {
@@ -97,5 +126,27 @@ export class CategoriesComponent implements OnInit {
 
   cancelDelete() {
     $('#deleteCategory').modal('hide');
+  }
+
+  export() {
+    const workbook = new Excel.Workbook();
+    const sheet = workbook.addWorksheet('Categories');
+    sheet.columns = [
+      { header: '#', key: 'id' },
+      { header: 'Label', key: 'label' },
+      { header: 'Background', key: 'background' },
+      { header: 'Font', key: 'font' },
+    ];
+    this.categories.forEach((expense: any, i: number) => {
+      sheet.addRow({
+        ...expense,
+        id: i + 1,
+      });
+    });
+
+    workbook.xlsx
+      .writeBuffer()
+      .then((buffer) => FileSaver.saveAs(new Blob([buffer]), `Categories.xlsx`))
+      .catch((err) => console.log('Error writing excel export', err));
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 /*----- required imports dont delete */
 import * as bootstrap from 'bootstrap';
 import * as jQuery from 'jquery';
@@ -10,6 +10,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import { TagService } from 'src/app/services/tag/tag.service';
 import { ExpenseService } from 'src/app/services/expense/expense.service';
 import { Chip } from 'src/app/models/chip';
+import { EventBusService } from 'src/app/services/eventBus/event-bus.service';
 
 @Component({
   selector: 'app-expenses',
@@ -25,12 +26,13 @@ export class ExpensesComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
-  showLoader: boolean = false;
+  @Output() error: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private categoryService: CategoryService,
     private tagService: TagService,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private eventBus: EventBusService
   ) {}
 
   ngOnInit(): void {
@@ -38,44 +40,79 @@ export class ExpensesComponent implements OnInit {
   }
 
   init() {
-    this.showLoader = true;
+    this.eventBus.emit('loader', true);
     Promise.all([this.categoryService.findAll(), this.tagService.findAll()])
       .then(([categories, tags]) => {
         this.categories = categories.data;
         this.tags = tags.data;
         this.get();
       })
-      .catch(() => {})
-      .finally(() => {
-        this.showLoader = false;
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
       });
   }
 
   get() {
-    this.expenseService.findAll().then((expenses: any) => {
-      this.expenses = expenses.data;
-    });
+    this.eventBus.emit('loader', true);
+    this.expenseService
+      .findAll()
+      .then((expenses: any) => {
+        this.expenses = expenses.data;
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   add() {
-    this.expenseService.add(this.expense).then(() => {
-      this.cancelAdd();
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.expenseService
+      .add(this.expense)
+      .then(() => {
+        this.cancelAdd();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   edit(item: Expense) {
-    this.expenseService.edit(item).then(() => {
-      this.cancelEdit(item);
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.expenseService
+      .edit(item)
+      .then(() => {
+        this.cancelEdit(item);
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   remove() {
-    this.expenseService.delete(this.backupExpense.id).then(() => {
-      this.cancelDelete();
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.expenseService
+      .delete(this.backupExpense.id)
+      .then(() => {
+        this.cancelDelete();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   enableAdd() {
@@ -146,9 +183,7 @@ export class ExpensesComponent implements OnInit {
 
     workbook.xlsx
       .writeBuffer()
-      .then((buffer) =>
-        FileSaver.saveAs(new Blob([buffer]), `Expenses.xlsx`)
-      )
+      .then((buffer) => FileSaver.saveAs(new Blob([buffer]), `Expenses.xlsx`))
       .catch((err) => console.log('Error writing excel export', err));
   }
 }

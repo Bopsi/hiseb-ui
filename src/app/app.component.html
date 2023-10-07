@@ -3,3 +3,40 @@
   <div class="p-2"><router-outlet></router-outlet></div>
   <app-footer></app-footer>
 </div>
+
+<div class="modal" id="errorModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+        <button
+          type="button"
+          class="btn btn-link text-danger p-0"
+          (click)="closeModal()"
+          aria-label="Close"
+        >
+          <i class="fa fa-lg fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-2 col-md-3 col-sm-12">
+            <i class="fa-solid fa-3x fa-triangle-exclamation text-danger"></i>
+          </div>
+          <div class="col-lg-10 col-md-9 col-sm-12">{{ errorMessage }}</div>
+        </div>
+      </div>
+      <div class="modal-footer text-center">
+        <button
+          type="button"
+          class="btn btn-secondary mx-auto"
+          (click)="closeModal()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loader [show]="showLoader"></app-loader>

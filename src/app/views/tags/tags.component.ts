@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-/*----- required imports dont delete */
-import * as bootstrap from 'bootstrap';
-import * as jQuery from 'jquery';
-/*----- required imports dont delete */
+import * as Excel from 'exceljs';
+import * as FileSaver from 'file-saver';
+
 import { Chip } from 'src/app/models/chip';
 import { TagService } from 'src/app/services/tag/tag.service';
+import { EventBusService } from 'src/app/services/eventBus/event-bus.service';
 
 @Component({
   selector: 'app-tags',
@@ -18,41 +18,77 @@ export class TagsComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
-  constructor(private tagService: TagService) {}
+  constructor(private tagService: TagService, private eventBus: EventBusService) {}
 
   ngOnInit(): void {
     this.get();
   }
 
   get() {
-    this.tagService.findAll().then((tags: any) => {
-      this.tags = tags.data;
-    });
+    this.eventBus.emit('loader', true);
+    this.tagService
+      .findAll()
+      .then((tags: any) => {
+        this.tags = tags.data;
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   add() {
-    this.tagService.add(this.tag).then(() => {
-      this.cancelAdd();
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.tagService
+      .add(this.tag)
+      .then(() => {
+        this.cancelAdd();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   edit(item: Chip) {
-    this.tagService.edit(item).then(() => {
-      this.cancelEdit(item);
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.tagService
+      .edit(item)
+      .then(() => {
+        this.cancelEdit(item);
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   remove() {
-    this.tagService.delete(this.backupTag.id).then(() => {
-      this.cancelDelete();
-      this.get();
-    });
+    this.eventBus.emit('loader', true);
+    this.tagService
+      .delete(this.backupTag.id)
+      .then(() => {
+        this.cancelDelete();
+        this.get();
+      })
+      .catch((e) => {
+        this.eventBus.emit('error', e.message);
+      })
+      .finally(() => {
+        this.eventBus.emit('loader', false);
+      });
   }
 
   enableAdd() {
-    this.tag = new Chip('', '#000000', '#FFFFFF');
+    this.tag = new Chip('', '#000000', '#ffffff');
     this.addEnabled = true;
   }
 
@@ -68,7 +104,7 @@ export class TagsComponent implements OnInit {
   }
 
   resetAdd() {
-    this.tag = new Chip('', '#000000', '#FFFFFF');
+    this.tag = new Chip('', '#000000', '#ffffff');
   }
 
   resetEdit(item: Chip) {
@@ -88,5 +124,27 @@ export class TagsComponent implements OnInit {
 
   cancelDelete() {
     $('#deleteTag').modal('hide');
+  }
+
+  export() {
+    const workbook = new Excel.Workbook();
+    const sheet = workbook.addWorksheet('Tags');
+    sheet.columns = [
+      { header: '#', key: 'id' },
+      { header: 'Label', key: 'label' },
+      { header: 'Background', key: 'background' },
+      { header: 'Font', key: 'font' },
+    ];
+    this.tags.forEach((tag: any, i: number) => {
+      sheet.addRow({
+        ...tag,
+        id: i + 1,
+      });
+    });
+
+    workbook.xlsx
+      .writeBuffer()
+      .then((buffer) => FileSaver.saveAs(new Blob([buffer]), `Tags.xlsx`))
+      .catch((err) => console.log('Error writing excel export', err));
   }
 }
