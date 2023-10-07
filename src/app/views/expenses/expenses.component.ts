@@ -267,17 +267,17 @@ export class ExpensesComponent implements OnInit {
     }
     switch (name) {
       case 'item':
-        let flag = true;
+        let iflag = true;
         if (value.item == '') {
           this.expenseError.item = 'Item is requried';
-          flag = false;
+          iflag = false;
         } else if (value.length < 3) {
           this.expenseError.item = 'Minimum length is 3';
-          flag = false;
+          iflag = false;
         }
-        return flag;
-        break;
+        return iflag;
       case 'amount':
+        let aflag = true;
         if (value == '') {
           this.expenseError.amount = 'Amount is requried';
           return false;

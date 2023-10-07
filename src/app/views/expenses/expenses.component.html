@@ -123,7 +123,6 @@
           <div class="invalid-feedback d-block">
             {{ expenseError.paidOn }}
           </div>
-          {{ expense.paidOn }}
         </td>
 
         <td>
@@ -203,10 +202,14 @@
           <button class="btn btn-success me-2" type="submit">
             <i class="fa fa-save"></i>
           </button>
-          <button class="btn btn-secondary me-2" (click)="resetAdd()">
+          <button
+            class="btn btn-secondary me-2"
+            type="button"
+            (click)="resetAdd()"
+          >
             <i class="fa-solid fa-rotate-left"></i>
           </button>
-          <button class="btn btn-danger" (click)="cancelAdd()">
+          <button class="btn btn-danger" type="button" (click)="cancelAdd()">
             <i class="fa fa-xmark"></i>
           </button>
         </td>
@@ -268,11 +271,16 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Label*"
               [(ngModel)]="expense.item"
+              (input)="validateField('item', expense.item)"
+              [class.hiseb-invalid]="expenseError.item"
               name="item"
             />
+            <div class="invalid-feedback d-block">
+              {{ expenseError.item }}
+            </div>
           </td>
+
           <td>
             <input
               type="number"
@@ -280,22 +288,37 @@
               [step]="1"
               class="form-control"
               [(ngModel)]="expense.amount"
+              (input)="validateField('amount', expense.amount)"
+              [class.hiseb-invalid]="expenseError.amount"
               name="amount"
+              required
             />
+            <div class="invalid-feedback d-block">
+              {{ expenseError.amount }}
+            </div>
           </td>
+
           <td>
             <input
               type="text"
               class="form-control"
               [(ngModel)]="expense.paidBy"
+              (input)="validateField('paidBy', expense.paidBy)"
+              [class.hiseb-invalid]="expenseError.paidBy"
               name="paidBy"
               required
             />
+            <div class="invalid-feedback d-block">
+              {{ expenseError.paidBy }}
+            </div>
           </td>
+
           <td>
             <select
               class="form-control"
               [(ngModel)]="expense.paidWith"
+              (input)="validateField('paidWith', expense.paidWith)"
+              [class.hiseb-invalid]="expenseError.paidWith"
               required
               name="paidWith"
             >
@@ -304,20 +327,32 @@
               <option value="Debit Card">Debit Card</option>
               <option value="Cash">Cash</option>
             </select>
+            <div class="invalid-feedback d-block">
+              {{ expenseError.paidWith }}
+            </div>
           </td>
+
           <td>
             <input
               type="date"
               class="form-control"
               [(ngModel)]="expense.paidOn"
+              (input)="validateField('paidOn', expense.paidOn)"
+              [class.hiseb-invalid]="expenseError.paidOn"
               required
               name="paidOn"
             />
+            <div class="invalid-feedback d-block">
+              {{ expenseError.paidOn }}
+            </div>
           </td>
+
           <td>
             <select
               class="form-control"
               [(ngModel)]="expense.category"
+              (input)="validateField('category', expense.category)"
+              [class.hiseb-invalid]="expenseError.category"
               required
               name="category"
               [compareWith]="equals"
@@ -339,11 +374,17 @@
                 {{ category.label }}
               </option>
             </select>
+            <div class="invalid-feedback d-block">
+              {{ expenseError.category }}
+            </div>
           </td>
+
           <td>
             <select
               class="form-control"
               [(ngModel)]="expense.tag"
+              (input)="validateField('tag', expense.tag)"
+              [class.hiseb-invalid]="expenseError.tag"
               required
               name="tag"
               [compareWith]="equals"
@@ -365,7 +406,11 @@
                 <app-chip [chip]="tag"></app-chip>
               </option>
             </select>
+            <div class="invalid-feedback d-block">
+              {{ expenseError.tag }}
+            </div>
           </td>
+
           <td>
             <input
               type="text"
@@ -375,13 +420,25 @@
             />
           </td>
           <td>
-            <button class="btn btn-success me-2" (click)="edit(expense)">
+            <button
+              class="btn btn-success me-2"
+              type="submit"
+              (click)="edit(expense)"
+            >
               <i class="fa fa-save"></i>
             </button>
-            <button class="btn btn-secondary me-2" (click)="resetEdit(expense)">
+            <button
+              class="btn btn-secondary me-2"
+              type="button"
+              (click)="resetEdit(expense)"
+            >
               <i class="fa-solid fa-rotate-left"></i>
             </button>
-            <button class="btn btn-danger" (click)="cancelEdit(expense)">
+            <button
+              class="btn btn-danger"
+              type="button"
+              (click)="cancelEdit(expense)"
+            >
               <i class="fa fa-xmark"></i>
             </button>
           </td>
