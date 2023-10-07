@@ -18,7 +18,10 @@ export class TagsComponent implements OnInit {
   addEnabled: boolean = false;
   editEnabled: boolean = false;
 
-  constructor(private tagService: TagService, private eventBus: EventBusService) {}
+  constructor(
+    private tagService: TagService,
+    private eventBus: EventBusService
+  ) {}
 
   ngOnInit(): void {
     this.get();
@@ -32,7 +35,7 @@ export class TagsComponent implements OnInit {
         this.tags = tags.data;
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -48,7 +51,7 @@ export class TagsComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -64,7 +67,7 @@ export class TagsComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -76,13 +79,13 @@ export class TagsComponent implements OnInit {
     this.tagService
       .delete(this.backupTag.id)
       .then(() => {
-        this.cancelDelete();
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
+        this.cancelDelete();
         this.eventBus.emit('loader', false);
       });
   }

@@ -55,7 +55,7 @@ export class ChartsComponent implements OnInit {
         this.initAmountVsTag();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -170,7 +170,7 @@ export class ChartsComponent implements OnInit {
       }
       let v = payers.get(exp.paidBy);
       if (v != undefined) {
-        payers.set(exp.paidBy, v + exp.amount);
+        payers.set(exp.paidBy, v + Number(exp.amount));
       }
       //-------------------
       if (!methods.has(exp.paidWith)) {
@@ -178,7 +178,7 @@ export class ChartsComponent implements OnInit {
       }
       v = methods.get(exp.paidWith);
       if (v != undefined) {
-        methods.set(exp.paidWith, v + exp.amount);
+        methods.set(exp.paidWith, v + Number(exp.amount));
       }
       //-------------------
       let category = exp.category || { label: '', background: '' };
@@ -187,7 +187,7 @@ export class ChartsComponent implements OnInit {
       }
       v = categories.get(category.label);
       if (v != undefined) {
-        categories.set(category.label, v + exp.amount);
+        categories.set(category.label, v + Number(exp.amount));
       }
       //- - - - - - - - - -
       if (!catColors.has(category.background)) {
@@ -200,7 +200,7 @@ export class ChartsComponent implements OnInit {
       }
       v = tags.get(tag.label);
       if (v != undefined) {
-        tags.set(tag.label, v + exp.amount);
+        tags.set(tag.label, v + Number(exp.amount));
       }
       //- - - - - - - - - -
       if (!tagColors.has(tag.background)) {

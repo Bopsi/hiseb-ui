@@ -23,137 +23,42 @@
   </div>
 </div>
 
-<table class="table table-striped border p-2">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Item</th>
-      <th scope="col">Amount</th>
-      <th scope="col">Paid By</th>
-      <th scope="col">Paid With</th>
-      <th scope="col">Paid On</th>
-      <th scope="col">Category</th>
-      <th scope="col">Tag</th>
-      <th scope="col">Comment</th>
-      <th scope="col" class="w-155-px">Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <!-- Add row -->
-    <tr *ngIf="addEnabled">
-      <td>#</td>
-      <td>
-        <input type="text" class="form-control" [(ngModel)]="expense.item" />
-      </td>
-      <td>
-        <input
-          type="number"
-          [min]="0"
-          [step]="1"
-          class="form-control"
-          [(ngModel)]="expense.amount"
-        />
-      </td>
-      <td>
-        <input type="text" class="form-control" [(ngModel)]="expense.paidBy" />
-      </td>
-      <td>
-        <select class="form-control" [(ngModel)]="expense.paidWith">
-          <option value="UPI">UPI</option>
-          <option value="Credit Card">Credit Card</option>
-          <option value="Debit Card">Debit Card</option>
-          <option value="Cash">Cash</option>
-        </select>
-      </td>
-      <td>
-        <input type="date" class="form-control" [(ngModel)]="expense.paidOn" />
-      </td>
-      <td>
-        <select class="form-control" [(ngModel)]="expense.category">
-          <option *ngFor="let category of categories" [ngValue]="category">
-            <app-chip [chip]="category"></app-chip>
-          </option>
-        </select>
-      </td>
-      <td>
-        <select class="form-control" [(ngModel)]="expense.tag">
-          <option *ngFor="let tag of tags" [ngValue]="tag">
-            <app-chip [chip]="tag"></app-chip>
-          </option>
-        </select>
-      </td>
-      <td>
-        <input type="text" class="form-control" [(ngModel)]="expense.comment" />
-      </td>
-      <td>
-        <button class="btn btn-success me-2" (click)="add()">
-          <i class="fa fa-save"></i>
-        </button>
-        <button class="btn btn-secondary me-2" (click)="resetAdd()">
-          <i class="fa-solid fa-rotate-left"></i>
-        </button>
-        <button class="btn btn-danger" (click)="cancelAdd()">
-          <i class="fa fa-xmark"></i>
-        </button>
-      </td>
-    </tr>
-
-    <ng-container *ngFor="let expense of expenses; let i = index">
-      <!-- Rows -->
-      <tr *ngIf="!expense.editing">
-        <td>#</td>
-        <td>
-          {{ expense.item }}
-        </td>
-        <td>
-          {{ expense.amount | currency : "INR" }}
-        </td>
-        <td>
-          {{ expense.paidBy }}
-        </td>
-        <td>
-          {{ expense.paidWith }}
-        </td>
-        <td>
-          {{ expense.paidOn | date }}
-        </td>
-        <td>
-          <app-chip
-            *ngIf="expense.category"
-            [chip]="expense.category"
-          ></app-chip>
-        </td>
-        <td>
-          <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
-        </td>
-        <td>
-          {{ expense.comment }}
-        </td>
-        <td>
-          <button
-            class="btn btn-primary me-2"
-            (click)="enableEdit(expense)"
-            [disabled]="editEnabled || addEnabled"
-          >
-            <i class="fa fa-edit"></i>
-          </button>
-          <button
-            class="btn btn-danger"
-            (click)="enableDelete(expense)"
-            [disabled]="editEnabled || addEnabled"
-          >
-            <i class="fa fa-trash"></i>
-          </button>
-        </td>
+<form (submit)="submit($event)">
+  <table class="table table-striped border p-2">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Item</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Paid By</th>
+        <th scope="col">Paid With</th>
+        <th scope="col">Paid On</th>
+        <th scope="col">Category</th>
+        <th scope="col">Tag</th>
+        <th scope="col">Comment</th>
+        <th scope="col" class="w-155-px">Actions</th>
       </tr>
+    </thead>
 
-      <!-- Editing row -->
-      <tr *ngIf="expense.editing">
+    <tbody>
+      <!-- Add row -->
+      <tr *ngIf="addEnabled">
         <td>#</td>
+
         <td>
-          <input type="text" class="form-control" [(ngModel)]="expense.item" />
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="expense.item"
+            (input)="validateField('item', expense.item)"
+            [class.hiseb-invalid]="expenseError.item"
+            name="item"
+          />
+          <div class="invalid-feedback d-block">
+            {{ expenseError.item }}
+          </div>
         </td>
+
         <td>
           <input
             type="number"
@@ -161,62 +66,330 @@
             [step]="1"
             class="form-control"
             [(ngModel)]="expense.amount"
+            (input)="validateField('amount', expense.amount)"
+            [class.hiseb-invalid]="expenseError.amount"
+            name="amount"
+            required
           />
+          <div class="invalid-feedback d-block">
+            {{ expenseError.amount }}
+          </div>
         </td>
+
         <td>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="expense.paidBy"
+            (input)="validateField('paidBy', expense.paidBy)"
+            [class.hiseb-invalid]="expenseError.paidBy"
+            name="paidBy"
+            required
           />
+          <div class="invalid-feedback d-block">
+            {{ expenseError.paidBy }}
+          </div>
         </td>
+
         <td>
-          <select class="form-control" [(ngModel)]="expense.paidWith">
-            <option [value]="null">--Select--</option>
+          <select
+            class="form-control"
+            [(ngModel)]="expense.paidWith"
+            (input)="validateField('paidWith', expense.paidWith)"
+            [class.hiseb-invalid]="expenseError.paidWith"
+            required
+            name="paidWith"
+          >
             <option value="UPI">UPI</option>
             <option value="Credit Card">Credit Card</option>
             <option value="Debit Card">Debit Card</option>
             <option value="Cash">Cash</option>
           </select>
+          <div class="invalid-feedback d-block">
+            {{ expenseError.paidWith }}
+          </div>
         </td>
+
         <td>
           <input
             type="date"
             class="form-control"
             [(ngModel)]="expense.paidOn"
+            (input)="validateField('paidOn', expense.paidOn)"
+            [class.hiseb-invalid]="expenseError.paidOn"
+            required
+            name="paidOn"
           />
+          <div class="invalid-feedback d-block">
+            {{ expenseError.paidOn }}
+          </div>
+          {{ expense.paidOn }}
         </td>
+
         <td>
-          <app-chip
-            *ngIf="expense.category"
-            [chip]="expense.category"
-          ></app-chip>
+          <select
+            class="form-control"
+            [(ngModel)]="expense.category"
+            (input)="validateField('category', expense.category)"
+            [class.hiseb-invalid]="expenseError.category"
+            required
+            name="category"
+            [compareWith]="equals"
+            [ngStyle]="{
+              'background-color': expense.category
+                ? expense.category.background
+                : '#fffff',
+              color: expense.category ? expense.category.font : '#000000'
+            }"
+          >
+            <option
+              *ngFor="let category of categories"
+              [ngValue]="category"
+              [ngStyle]="{
+                'background-color': category.background,
+                color: category.font
+              }"
+            >
+              {{ category.label }}
+            </option>
+          </select>
+          <div class="invalid-feedback d-block">
+            {{ expenseError.category }}
+          </div>
         </td>
+
         <td>
-          <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
+          <select
+            class="form-control"
+            [(ngModel)]="expense.tag"
+            (input)="validateField('tag', expense.tag)"
+            [class.hiseb-invalid]="expenseError.tag"
+            required
+            name="tag"
+            [compareWith]="equals"
+            [ngStyle]="{
+              'background-color': expense.tag
+                ? expense.tag.background
+                : '#fffff',
+              color: expense.tag ? expense.tag.font : '#000000'
+            }"
+          >
+            <option
+              *ngFor="let tag of tags"
+              [ngValue]="tag"
+              [ngStyle]="{
+                'background-color': tag.background,
+                color: tag.font
+              }"
+            >
+              <app-chip [chip]="tag"></app-chip>
+            </option>
+          </select>
+          <div class="invalid-feedback d-block">
+            {{ expenseError.tag }}
+          </div>
         </td>
+
         <td>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="expense.comment"
+            name="comment"
           />
         </td>
+
         <td>
-          <button class="btn btn-success me-2" (click)="edit(expense)">
+          <button class="btn btn-success me-2" type="submit">
             <i class="fa fa-save"></i>
           </button>
-          <button class="btn btn-secondary me-2" (click)="resetEdit(expense)">
+          <button class="btn btn-secondary me-2" (click)="resetAdd()">
             <i class="fa-solid fa-rotate-left"></i>
           </button>
-          <button class="btn btn-danger" (click)="cancelEdit(expense)">
+          <button class="btn btn-danger" (click)="cancelAdd()">
             <i class="fa fa-xmark"></i>
           </button>
         </td>
       </tr>
-    </ng-container>
-  </tbody>
-</table>
+
+      <ng-container *ngFor="let expense of expenses; let i = index">
+        <!-- Rows -->
+        <tr *ngIf="!expense.editing">
+          <td>{{ i + 1 }}</td>
+          <td>
+            {{ expense.item }}
+          </td>
+          <td>
+            {{ expense.amount | currency : "INR" }}
+          </td>
+          <td>
+            {{ expense.paidBy }}
+          </td>
+          <td>
+            {{ expense.paidWith }}
+          </td>
+          <td>
+            {{ expense.paidOn | date }}
+          </td>
+          <td>
+            <app-chip
+              *ngIf="expense.category"
+              [chip]="expense.category"
+            ></app-chip>
+          </td>
+          <td>
+            <app-chip *ngIf="expense.tag" [chip]="expense.tag"></app-chip>
+          </td>
+          <td>
+            {{ expense.comment }}
+          </td>
+          <td>
+            <button
+              class="btn btn-primary me-2"
+              (click)="enableEdit(expense)"
+              [disabled]="editEnabled || addEnabled"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+            <button
+              class="btn btn-danger"
+              (click)="enableDelete(expense)"
+              [disabled]="editEnabled || addEnabled"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <!-- Editing row -->
+        <tr *ngIf="expense.editing">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Label*"
+              [(ngModel)]="expense.item"
+              name="item"
+            />
+          </td>
+          <td>
+            <input
+              type="number"
+              [min]="0"
+              [step]="1"
+              class="form-control"
+              [(ngModel)]="expense.amount"
+              name="amount"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="expense.paidBy"
+              name="paidBy"
+              required
+            />
+          </td>
+          <td>
+            <select
+              class="form-control"
+              [(ngModel)]="expense.paidWith"
+              required
+              name="paidWith"
+            >
+              <option value="UPI">UPI</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </td>
+          <td>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="expense.paidOn"
+              required
+              name="paidOn"
+            />
+          </td>
+          <td>
+            <select
+              class="form-control"
+              [(ngModel)]="expense.category"
+              required
+              name="category"
+              [compareWith]="equals"
+              [ngStyle]="{
+                'background-color': expense.category
+                  ? expense.category.background
+                  : '#fffff',
+                color: expense.category ? expense.category.font : '#000000'
+              }"
+            >
+              <option
+                *ngFor="let category of categories"
+                [ngValue]="category"
+                [ngStyle]="{
+                  'background-color': category.background,
+                  color: category.font
+                }"
+              >
+                {{ category.label }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <select
+              class="form-control"
+              [(ngModel)]="expense.tag"
+              required
+              name="tag"
+              [compareWith]="equals"
+              [ngStyle]="{
+                'background-color': expense.tag
+                  ? expense.tag.background
+                  : '#fffff',
+                color: expense.tag ? expense.tag.font : '#000000'
+              }"
+            >
+              <option
+                *ngFor="let tag of tags"
+                [ngValue]="tag"
+                [ngStyle]="{
+                  'background-color': tag.background,
+                  color: tag.font
+                }"
+              >
+                <app-chip [chip]="tag"></app-chip>
+              </option>
+            </select>
+          </td>
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="expense.comment"
+              name="comment"
+            />
+          </td>
+          <td>
+            <button class="btn btn-success me-2" (click)="edit(expense)">
+              <i class="fa fa-save"></i>
+            </button>
+            <button class="btn btn-secondary me-2" (click)="resetEdit(expense)">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button class="btn btn-danger" (click)="cancelEdit(expense)">
+              <i class="fa fa-xmark"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</form>
 
 <div class="modal" id="deleteExpense" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">

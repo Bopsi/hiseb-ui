@@ -3,10 +3,10 @@ import { Chip } from './chip';
 export class Expense {
   id: number = 0;
   item: string;
-  amount: number;
+  amount: string;
   paidBy: string;
   paidWith: string;
-  paidOn: Date;
+  paidOn: string;
   category: Chip | null;
   tag: Chip | null;
   comment: string;
@@ -14,10 +14,10 @@ export class Expense {
 
   constructor(
     item: string,
-    amount: number,
+    amount: string,
     paidBy: string,
     paidWith: string,
-    paidOn: Date,
+    paidOn: string,
     category: Chip | null,
     tag: Chip | null,
     comment: string

@@ -37,7 +37,7 @@ export class CategoriesComponent implements OnInit {
         this.categories = categories.data;
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -52,7 +52,7 @@ export class CategoriesComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -67,7 +67,7 @@ export class CategoriesComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -78,13 +78,13 @@ export class CategoriesComponent implements OnInit {
     this.categoryService
       .delete(this.backupCategory.id)
       .then(() => {
-        this.cancelDelete();
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
+        this.cancelDelete();
         this.eventBus.emit('loader', false);
       });
   }

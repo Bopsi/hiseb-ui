@@ -5,6 +5,7 @@ import * as jQuery from 'jquery';
 /*----- required imports dont delete */
 import * as Excel from 'exceljs';
 import * as FileSaver from 'file-saver';
+import * as _ from 'lodash';
 import { Expense } from 'src/app/models/expense';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { TagService } from 'src/app/services/tag/tag.service';
@@ -25,6 +26,15 @@ export class ExpensesComponent implements OnInit {
   backupExpense!: Expense;
   addEnabled: boolean = false;
   editEnabled: boolean = false;
+  expenseError: any = {
+    item: '',
+    amount: '',
+    paidBy: '',
+    paidOn: '',
+    paidWith: '',
+    category: '',
+    tag: '',
+  };
 
   @Output() error: EventEmitter<string> = new EventEmitter<string>();
 
@@ -48,7 +58,7 @@ export class ExpensesComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       });
   }
 
@@ -60,7 +70,7 @@ export class ExpensesComponent implements OnInit {
         this.expenses = expenses.data;
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -76,7 +86,7 @@ export class ExpensesComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -92,7 +102,7 @@ export class ExpensesComponent implements OnInit {
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
         this.eventBus.emit('loader', false);
@@ -104,19 +114,19 @@ export class ExpensesComponent implements OnInit {
     this.expenseService
       .delete(this.backupExpense.id)
       .then(() => {
-        this.cancelDelete();
         this.get();
       })
       .catch((e) => {
-        this.eventBus.emit('error', e.message);
+        this.eventBus.emit('error', e.response.data.message);
       })
       .finally(() => {
+        this.cancelDelete();
         this.eventBus.emit('loader', false);
       });
   }
 
   enableAdd() {
-    this.expense = new Expense('', 0.0, '', '', new Date(), null, null, '');
+    this.expense = new Expense('', '', '', '', '', null, null, '');
     this.addEnabled = true;
   }
 
@@ -132,7 +142,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   resetAdd() {
-    this.expense = new Expense('', 0.0, '', '', new Date(), null, null, '');
+    this.expense = new Expense('', '', '', '', '', null, null, '');
   }
 
   resetEdit(item: Expense) {
@@ -185,5 +195,125 @@ export class ExpensesComponent implements OnInit {
       .writeBuffer()
       .then((buffer) => FileSaver.saveAs(new Blob([buffer]), `Expenses.xlsx`))
       .catch((err) => console.log('Error writing excel export', err));
+  }
+
+  submit(e: any) {
+    e.stopPropagation();
+    let isValid = this.validate();
+
+    if (isValid) {
+      if (this.addEnabled) {
+        this.add();
+      } else {
+        let expense = _.find(this.expenses, (expense) => {
+          return expense.editing;
+        });
+        if (expense) {
+          this.edit(expense);
+        }
+      }
+    }
+  }
+
+  equals(o1: Chip, o2: Chip) {
+    return (o1 ? o1.label : o1) == (o2 ? o2.label : o2);
+  }
+
+  validate(): boolean {
+    let valid = true;
+
+    this.expenseError = {
+      item: '',
+      amount: '',
+      paidBy: '',
+      paidOn: '',
+      paidWith: '',
+      category: '',
+      tag: '',
+    };
+
+    if (this.addEnabled) {
+      valid = this.validateField('item', this.expense.item) && valid;
+      valid = this.validateField('amount', this.expense.amount) && valid;
+      valid = this.validateField('paidBy', this.expense.paidBy) && valid;
+      valid = this.validateField('paidOn', this.expense.paidOn) && valid;
+      valid = this.validateField('paidWith', this.expense.paidWith) && valid;
+      valid = this.validateField('category', this.expense.category) && valid;
+      valid = this.validateField('tag', this.expense.tag) && valid;
+    } else {
+      let expense = _.find(this.expenses, (expense) => {
+        return expense.editing;
+      });
+
+      if (!expense) {
+        return false;
+      }
+
+      valid = this.validateField('item', expense.item) && valid;
+      valid = this.validateField('amount', expense.amount) && valid;
+      valid = this.validateField('paidBy', expense.paidBy) && valid;
+      valid = this.validateField('paidOn', expense.paidOn) && valid;
+      valid = this.validateField('paidWith', expense.paidWith) && valid;
+      valid = this.validateField('category', expense.category) && valid;
+      valid = this.validateField('tag', expense.tag) && valid;
+    }
+
+    return valid;
+  }
+
+  validateField(name: string, value: any): boolean {
+    if (this.expenseError[name]) {
+      this.expenseError[name] = '';
+    }
+    switch (name) {
+      case 'item':
+        let flag = true;
+        if (value.item == '') {
+          this.expenseError.item = 'Item is requried';
+          flag = false;
+        } else if (value.length < 3) {
+          this.expenseError.item = 'Minimum length is 3';
+          flag = false;
+        }
+        return flag;
+        break;
+      case 'amount':
+        if (value == '') {
+          this.expenseError.amount = 'Amount is requried';
+          return false;
+        }
+        break;
+      case 'paidBy':
+        if (value == '') {
+          this.expenseError.paidBy = 'Paid By is requried';
+          return false;
+        }
+        break;
+      case 'paidOn':
+        if (value == '') {
+          this.expenseError.paidOn = 'Paid On is requried';
+          return false;
+        }
+        break;
+      case 'paidWith':
+        if (value == '') {
+          this.expenseError.paidWith = 'Paid With is requried';
+          return false;
+        }
+        break;
+      case 'category':
+        if (value == null) {
+          this.expenseError.category = 'Category is requried';
+          return false;
+        }
+        break;
+      case 'tag':
+        if (value == null) {
+          this.expenseError.tag = 'Tag is requried';
+          return false;
+        }
+        break;
+    }
+    return true;
   }
 }

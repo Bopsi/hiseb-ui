@@ -105,7 +105,7 @@ export class DashboardComponent implements OnInit {
       }
       let v = payers.get(exp.paidBy);
       if (v != undefined) {
-        payers.set(exp.paidBy, v + exp.amount);
+        payers.set(exp.paidBy, v + Number(exp.amount));
       }
 
       //-------------------
@@ -115,7 +115,7 @@ export class DashboardComponent implements OnInit {
       }
       v = categories.get(category.label);
       if (v != undefined) {
-        categories.set(category.label, v + exp.amount);
+        categories.set(category.label, v + Number(exp.amount));
       }
       //- - - - - - - - - -
       if (!catColors.has(category.background)) {
