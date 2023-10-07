@@ -216,7 +216,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   equals(o1: Chip, o2: Chip) {
-    return (o1 ? o1.label : o1) == (o2 ? o2.label : o2);
+    return (o1 ? o1.label : o1) === (o2 ? o2.label : o2);
   }
 
   validate(): boolean {
@@ -268,7 +268,7 @@ export class ExpensesComponent implements OnInit {
     switch (name) {
       case 'item':
         let iflag = true;
-        if (value.item == '') {
+        if (value.item === '') {
           this.expenseError.item = 'Item is requried';
           iflag = false;
         } else if (value.length < 3) {
@@ -278,37 +278,40 @@ export class ExpensesComponent implements OnInit {
         return iflag;
       case 'amount':
         let aflag = true;
-        if (value == '') {
+        if (value === '' || value === null) {
           this.expenseError.amount = 'Amount is requried';
-          return false;
+          aflag = false;
+        } else if (value < 0) {
+          this.expenseError.amount = 'Amount cannot be negative';
+          aflag = false
         }
-        break;
+        return aflag;
       case 'paidBy':
-        if (value == '') {
+        if (value === '') {
           this.expenseError.paidBy = 'Paid By is requried';
           return false;
         }
         break;
       case 'paidOn':
-        if (value == '') {
+        if (value === '') {
           this.expenseError.paidOn = 'Paid On is requried';
           return false;
         }
         break;
       case 'paidWith':
-        if (value == '') {
+        if (value === '') {
           this.expenseError.paidWith = 'Paid With is requried';
           return false;
         }
         break;
       case 'category':
-        if (value == null) {
+        if (value === null) {
           this.expenseError.category = 'Category is requried';
           return false;
         }
         break;
       case 'tag':
-        if (value == null) {
+        if (value === null) {
           this.expenseError.tag = 'Tag is requried';
           return false;
         }
